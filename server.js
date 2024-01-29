@@ -114,6 +114,10 @@ app.get("/api/menulist", async (_req, res) => {
   }
 });
 
+app.get("/", (_req, res) => {
+  res.send({ status: 200, data: "Home!" });
+});
+
 // app listen
 app.listen(PORT, () => {
   console.log(
