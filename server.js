@@ -16,23 +16,31 @@ mongoose
   .catch((error) => console.error("MongoDB connection failed:", error));
 
 // schema
-const menuSchema = new mongoose.Schema({
-  imageUrl: String,
-  title: String,
-  ratings: String,
-  description: String,
-  price: String,
-});
-
 const popularMenuSchema = new mongoose.Schema({
   imageUrl: String,
   title: String,
   ratings: String,
 });
 
+const menuSchema = new mongoose.Schema({
+  imageUrl: String,
+  title: String,
+  category: String,
+  ratings: String,
+  description: String,
+  price: String,
+});
+
+const reviewSchema = new mongoose.Schema({
+  clientImageUrl: String,
+  name: String,
+  review: String,
+});
+
 // models
-const Menu = mongoose.model("Menu", menuSchema);
 const PopularMenu = mongoose.model("PopularMenu", popularMenuSchema);
+const Menu = mongoose.model("Menu", menuSchema);
+const Review = mongoose.model("Review", reviewSchema);
 
 // add popular menu
 app.post("/api/addpopularmenu", async (req, res) => {
@@ -65,15 +73,23 @@ app.post("/api/addpopularmenu", async (req, res) => {
 // add menu
 app.post("/api/addmenu", async (req, res) => {
   try {
-    const { imageUrl, title, ratings, description, price } = req.body;
+    const { imageUrl, title, category, ratings, description, price } = req.body;
 
-    if (!imageUrl || !title || !ratings || !description || !price) {
+    if (
+      !imageUrl ||
+      !title ||
+      !category ||
+      !ratings ||
+      !description ||
+      !price
+    ) {
       return res.status(400).send("Missing required fields.");
     }
 
     const newMenu = Menu({
       imageUrl,
       title,
+      category,
       ratings,
       description,
       price,
@@ -92,7 +108,35 @@ app.post("/api/addmenu", async (req, res) => {
   }
 });
 
-// add popular menu
+// add review
+app.post("/api/addreview", async (req, res) => {
+  try {
+    const { clientImageUrl, name, review } = req.body;
+
+    if (!clientImageUrl || !name || !review) {
+      return res.status(400).send("Missing required fields.");
+    }
+
+    const newReview = Review({
+      clientImageUrl,
+      name,
+      review,
+    });
+
+    try {
+      await newReview.save();
+      res.status(201).send("Review created successfully.");
+    } catch (saveError) {
+      console.error("Error saving review:", saveError);
+      res.status(500).send("Error saving review to the database.");
+    }
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// get popular menu
 app.get("/api/popularmenulist", async (_req, res) => {
   try {
     const popularMenu = await PopularMenu.find();
@@ -114,6 +158,18 @@ app.get("/api/menulist", async (_req, res) => {
   }
 });
 
+// get review
+app.get("/api/review", async (_req, res) => {
+  try {
+    const review = await Review.find();
+    res.status(200).send({ status: 200, data: review });
+  } catch (error) {
+    console.error("Error fetching review:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// home route
 app.get("/", (_req, res) => {
   res.send({ status: 200, data: "Home!" });
 });
