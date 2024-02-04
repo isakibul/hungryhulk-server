@@ -37,10 +37,18 @@ const reviewSchema = new mongoose.Schema({
   review: String,
 });
 
+const blogSchema = new mongoose.Schema({
+  blogImageUrl: String,
+  title: String,
+  subDescription: String,
+  description: String,
+});
+
 // models
 const PopularMenu = mongoose.model("PopularMenu", popularMenuSchema);
 const Menu = mongoose.model("Menu", menuSchema);
 const Review = mongoose.model("Review", reviewSchema);
+const Blog = mongoose.model("Blog", blogSchema);
 
 // add popular menu
 app.post("/api/addpopularmenu", async (req, res) => {
@@ -136,6 +144,35 @@ app.post("/api/addreview", async (req, res) => {
   }
 });
 
+// add blog
+app.post("/api/addblog", async (req, res) => {
+  try {
+    const { blogImageUrl, title, subDescription, description } = req.body;
+
+    if (!blogImageUrl || !title || !subDescription || !description) {
+      return res.status(400).send("Missing required fields.");
+    }
+
+    const newBlog = Blog({
+      blogImageUrl,
+      title,
+      subDescription,
+      description,
+    });
+
+    try {
+      await newBlog.save();
+      res.status(201).send("Blog created successfully.");
+    } catch (saveError) {
+      console.error("Error saving blog:", saveError);
+      res.status(500).send("Error saving blog to the database.");
+    }
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // get popular menu
 app.get("/api/popularmenulist", async (_req, res) => {
   try {
@@ -165,6 +202,17 @@ app.get("/api/review", async (_req, res) => {
     res.status(200).send({ status: 200, data: review });
   } catch (error) {
     console.error("Error fetching review:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// get blog
+app.get("/api/blog", async (_req, res) => {
+  try {
+    const blog = await Blog.find();
+    res.status(200).send({ status: 200, data: blog });
+  } catch (error) {
+    console.error("Error fetching blog:", error);
     res.status(500).send("Internal Server Error");
   }
 });
