@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+// import controllers
+const controllers = require("./controllers/mainControllers");
+
+// destructure controllers
 const {
   addPopularMenu,
   addMenu,
@@ -10,7 +14,7 @@ const {
   getMenuList,
   getReviewList,
   getBlogList,
-} = require("./controllers");
+} = controllers;
 
 // add popular menu
 router.post("/addpopularmenu", addPopularMenu);

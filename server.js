@@ -11,11 +11,13 @@ app.use(cors());
 const PORT = process.env.PORT || 5000;
 const dbURL = process.env.MONGODB_URI;
 
+// mongodb configuration
 mongoose
   .connect(dbURL)
   .then(() => console.log("Connected to MongoDB."))
   .catch((error) => console.error("MongoDB connection failed:", error));
 
+// routes configuration
 app.use("/api", routes);
 
 // home route
