@@ -3,7 +3,6 @@ const { PopularMenu } = require("../../models");
 const addPopularMenu = async (req, res) => {
   try {
     const { imageUrl, title, ratings } = req.body;
-
     if (!imageUrl || !title || !ratings) {
       return res.status(400).send("Missing required fields.");
     }
