@@ -1,6 +1,5 @@
-const Review = require("../models/Review");
+const { Review } = require("../../models");
 
-// add review
 const addReview = async (req, res) => {
   try {
     const { clientImageUrl, name, review } = req.body;
@@ -28,18 +27,4 @@ const addReview = async (req, res) => {
   }
 };
 
-// get review
-const getReviewList = async (_req, res) => {
-  try {
-    const review = await Review.find();
-    res.status(200).send({ status: 200, data: review });
-  } catch (error) {
-    console.error("Error fetching review:", error);
-    res.status(500).send("Internal Server Error");
-  }
-};
-
-module.exports = {
-  addReview,
-  getReviewList,
-};
+module.exports = addReview;

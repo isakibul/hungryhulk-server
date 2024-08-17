@@ -1,6 +1,5 @@
-const Blog = require("../models/Blog");
+const { Blog } = require("../../models");
 
-// add blog
 const addBlog = async (req, res) => {
   try {
     const {
@@ -48,18 +47,4 @@ const addBlog = async (req, res) => {
   }
 };
 
-// get blog
-const getBlogList = async (_req, res) => {
-  try {
-    const blog = await Blog.find();
-    res.status(200).send({ status: 200, data: blog });
-  } catch (error) {
-    console.error("Error fetching blog:", error);
-    res.status(500).send("Internal Server Error");
-  }
-};
-
-module.exports = {
-  addBlog,
-  getBlogList,
-};
+module.exports = addBlog;

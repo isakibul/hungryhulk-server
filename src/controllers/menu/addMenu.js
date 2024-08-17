@@ -1,6 +1,5 @@
-const Menu = require("../models/Menu");
+const { Menu } = require("../../models");
 
-// add menu
 const addMenu = async (req, res) => {
   try {
     const { imageUrl, title, category, ratings, description, price } = req.body;
@@ -38,18 +37,4 @@ const addMenu = async (req, res) => {
   }
 };
 
-// get menu
-const getMenuList = async (_req, res) => {
-  try {
-    const menu = await Menu.find();
-    res.status(200).send({ status: 200, data: menu });
-  } catch (error) {
-    console.error("Error fetching menu:", error);
-    res.status(500).send("Internal Server Error");
-  }
-};
-
-module.exports = {
-  addMenu,
-  getMenuList,
-};
+module.exports = addMenu;
