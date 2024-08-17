@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cors());
 
 // routes configuration
-app.use("/api", routes);
+app.use(routes);
 
 // health checker
 app.get("/health", (_req, res) => {
